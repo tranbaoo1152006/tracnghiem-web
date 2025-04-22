@@ -79,6 +79,13 @@
     #submitBtn:disabled {
       background-color: #9ca3af;
     }
+    #teacherUpload {
+      margin: 20px auto;
+      text-align: center;
+    }
+    input[type="file"] {
+      padding: 5px;
+    }
   </style>
 </head>
 <body>
@@ -109,6 +116,12 @@
 
     <button onclick="checkAnswers()" id="submitBtn">Nộp bài</button>
     <div id="score"></div>
+
+    <div id="teacherUpload">
+      <h3>👩‍🏫 Giáo viên có file đề trắc nghiệm?</h3>
+      <input type="file" id="uploadFile">
+      <p><i>(Tính năng đang phát triển)</i></p>
+    </div>
   </div>
 
   <script>
