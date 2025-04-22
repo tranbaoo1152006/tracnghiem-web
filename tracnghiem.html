@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trắc nghiệm trực tuyến</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 20px 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+      color: #1f2937;
+    }
+    .question {
+      margin-bottom: 25px;
+      padding: 10px 15px;
+      background-color: #f9fafb;
+      border-left: 4px solid #3b82f6;
+      border-radius: 5px;
+    }
+    .question p {
+      font-weight: bold;
+    }
+    label {
+      display: block;
+      margin-left: 10px;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
+    }
+    .answer-key {
+      margin-top: 5px;
+      font-style: italic;
+      color: gray;
+    }
+    #timer {
+      font-size: 18px;
+      color: #ef4444;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #score {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #16a34a;
+      text-align: center;
+    }
+    #submitBtn {
+      background-color: #3b82f6;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin: 20px auto;
+    }
+    #submitBtn:disabled {
+      background-color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Trắc nghiệm</h1>
+
+    <div id="timer">Thời gian còn: 01:00</div>
+
+    <div class="question" data-answer="B">
+      <p>1. Thủ đô của Việt Nam là gì?</p>
+      <label><input type="radio" name="q1" value="A"> A. TP. Hồ Chí Minh</label>
+      <label><input type="radio" name="q1" value="B"> B. Hà Nội</label>
+      <label><input type="radio" name="q1" value="C"> C. Đà Nẵng</label>
+      <label><input type="radio" name="q1" value="D"> D. Cần Thơ</label>
+      <div class="result"></div>
+      <div class="answer-key" style="display: none;">Đáp án đúng: B</div>
+    </div>
+
+    <div class="question" data-answer="C">
+      <p>2. 2 + 2 bằng bao nhiêu?</p>
+      <label><input type="radio" name="q2" value="A"> A. 5</label>
+      <label><input type="radio" name="q2" value="B"> B. 3</label>
+      <label><input type="radio" name="q2" value="C"> C. 4</label>
+      <label><input type="radio" name="q2" value="D"> D. 6</label>
+      <div class="result"></div>
+      <div class="answer-key" style="display: none;">Đáp án đúng: C</div>
+    </div>
+
+    <button onclick="checkAnswers()" id="submitBtn">Nộp bài</button>
+    <div id="score"></div>
+  </div>
+
+  <script>
+    let timeLeft = 60;
+    const timerEl = document.getElementById('timer');
+    const submitBtn = document.getElementById('submitBtn');
+    const scoreEl = document.getElementById('score');
+
+    const countdown = setInterval(() => {
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      timerEl.textContent = `Thời gian còn: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        checkAnswers();
+        submitBtn.disabled = true;
+        timerEl.textContent = 'Hết giờ! Bài đã được nộp.';
+      }
+      timeLeft--;
+    }, 1000);
+
+    function checkAnswers() {
+      let score = 0;
+      const questions = document.querySelectorAll('.question');
+      questions.forEach((q, index) => {
+        const correct = q.getAttribute('data-answer');
+        const name = `q${index + 1}`;
+        const selected = document.querySelector(`input[name=${name}]:checked`);
+        const result = q.querySelector('.result');
+        const answerKey = q.querySelector('.answer-key');
+
+        if (selected) {
+          if (selected.value === correct) {
+            result.textContent = 'Đúng!';
+            result.className = 'result correct';
+            score++;
+          } else {
+            result.textContent = 'Sai!';
+            result.className = 'result incorrect';
+          }
+        } else {
+          result.textContent = 'Chưa chọn đáp án';
+          result.className = 'result';
+        }
+
+        answerKey.style.display = 'block';
+      });
+
+      scoreEl.textContent = `Điểm của bạn: ${score}/${questions.length}`;
+      submitBtn.disabled = true;
+    }
+  </script>
+</body>
+</html>
